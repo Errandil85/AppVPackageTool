@@ -1,0 +1,12 @@
+P:\Documents\GitHub\AppVPackageTool\AppVPackageTool\AppVPackageTool.Library\bin\Debug\AppVPackageTool.Library.dll
+P:\Documents\GitHub\AppVPackageTool\AppVPackageTool\AppVPackageTool.Library\bin\Debug\AppVPackageTool.Library.pdb
+P:\Documents\GitHub\AppVPackageTool\AppVPackageTool\AppVPackageTool.Library\obj\Debug\AppVPackageTool.Library.csproj.AssemblyReference.cache
+P:\Documents\GitHub\AppVPackageTool\AppVPackageTool\AppVPackageTool.Library\obj\Debug\AppVPackageTool.Library.csproj.CoreCompileInputs.cache
+P:\Documents\GitHub\AppVPackageTool\AppVPackageTool\AppVPackageTool.Library\obj\Debug\AppVPackageTool.Library.dll
+P:\Documents\GitHub\AppVPackageTool\AppVPackageTool\AppVPackageTool.Library\obj\Debug\AppVPackageTool.Library.pdb
+\\pellens.one\Storage\Users\kpellens\Documents\GitHub\AppVPackageTool\AppVPackageTool\AppVPackageTool.Library\bin\Debug\AppVPackageTool.Library.dll
+\\pellens.one\Storage\Users\kpellens\Documents\GitHub\AppVPackageTool\AppVPackageTool\AppVPackageTool.Library\bin\Debug\AppVPackageTool.Library.pdb
+\\pellens.one\Storage\Users\kpellens\Documents\GitHub\AppVPackageTool\AppVPackageTool\AppVPackageTool.Library\obj\Debug\AppVPackageTool.Library.csproj.AssemblyReference.cache
+\\pellens.one\Storage\Users\kpellens\Documents\GitHub\AppVPackageTool\AppVPackageTool\AppVPackageTool.Library\obj\Debug\AppVPackageTool.Library.csproj.CoreCompileInputs.cache
+\\pellens.one\Storage\Users\kpellens\Documents\GitHub\AppVPackageTool\AppVPackageTool\AppVPackageTool.Library\obj\Debug\AppVPackageTool.Library.dll
+\\pellens.one\Storage\Users\kpellens\Documents\GitHub\AppVPackageTool\AppVPackageTool\AppVPackageTool.Library\obj\Debug\AppVPackageTool.Library.pdb
