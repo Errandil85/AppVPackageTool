@@ -16,5 +16,7 @@ namespace AppVPackageTool.Library
         public string Version { get; set; }
         public string PackageID { get; set; }
         public string VersionID { get; set; }
+        public bool IsPublishedGlobally { get; set; }
+        public bool InUse { get; set; }
     }
 }

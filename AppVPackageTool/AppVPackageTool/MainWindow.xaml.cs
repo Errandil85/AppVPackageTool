@@ -37,7 +37,6 @@ namespace AppVPackageTool
             List<ListAppvPackages> appvPackages = WmiQuery.GetAppvPackagesLocalHost();
             wmiAppvListBox.ItemsSource = appvPackages;
             Connection.status = "";
-            MessageBox.Show(Connection.status.Length.ToString());
             conectedToLabel.Content = "Connected to: Localhost";
             conectedToLabel.Visibility = Visibility.Visible;
             refreshButton.IsEnabled = true;
@@ -47,22 +46,13 @@ namespace AppVPackageTool
         {
             Connection.status = hostnameTextBox.Text;
             List<ListAppvPackages> appvPackages = WmiQuery.GetAppvPackagesRemote(hostnameTextBox.Text);
-            wmiAppvListBox.ItemsSource = appvPackages;
-            MessageBox.Show(Connection.status.Length.ToString());
-            conectedToLabel.Content = $"Connected to: {hostnameTextBox.Text}";
-            conectedToLabel.Visibility = Visibility.Visible;
-            refreshButton.IsEnabled = true;
-        }
-
-        private async Task loadListRemoteAsync()
-        {
-            Connection.status = hostnameTextBox.Text;
-            List<ListAppvPackages> appvPackages = await Task.Run(() => WmiQuery.GetAppvPackagesRemote(hostnameTextBox.Text));
-            wmiAppvListBox.ItemsSource = appvPackages;
-            MessageBox.Show(Connection.status.Length.ToString());
-            conectedToLabel.Content = $"Connected to: {hostnameTextBox.Text}";
-            conectedToLabel.Visibility = Visibility.Visible;
-            refreshButton.IsEnabled = true;
+            if (appvPackages.Count > 0)
+            {
+                wmiAppvListBox.ItemsSource = appvPackages;
+                conectedToLabel.Content = $"Connected to: {hostnameTextBox.Text}";
+                conectedToLabel.Visibility = Visibility.Visible;
+                refreshButton.IsEnabled = true;
+            }
         }
 
         private void localHostButton_Click(object sender, RoutedEventArgs e)
@@ -73,18 +63,59 @@ namespace AppVPackageTool
         private void removePackageButton_Click(object sender, RoutedEventArgs e)
         {
             ListAppvPackages item = wmiAppvListBox.SelectedItem as ListAppvPackages;
-            MessageBox.Show($"{item.Name} {item.PackageID}");
+            MessageBox.Show($"{item.Name} {item.IsPublishedGlobally}");
+            if (item.InUse != true)
+            {
+                RemovePackage(item);
+            }
+            else
+            {
+                StopAppvClientPackage(item);
+                Thread.Sleep(2000);
+                RemovePackage(item);
+            }
+            
+        }
+
+        private void RemovePackage(ListAppvPackages item)
+        {
             if (Connection.status.Length > 0)
             {
-                WmiQuery.RemoveAppvPackageRemote(item.PackageID, item.VersionID, hostnameTextBox.Text);
+                if (item.IsPublishedGlobally)
+                {
+                    WmiQuery.RemoveAppvPackageRemote(item.PackageID, item.VersionID, hostnameTextBox.Text);
+                }
+                else
+                {
+                    WmiQuery.RemoveAppvPackageRemoteUser(item.PackageID, item.VersionID, hostnameTextBox.Text);
+                }
                 Thread.Sleep(5000);
                 loadListRemote();
             }
             else
             {
-                WmiQuery.RemoveAppvPackageLocalHost(item.PackageID, item.VersionID);
+                if (item.IsPublishedGlobally)
+                {
+                    WmiQuery.RemoveAppvPackageLocalHost(item.PackageID, item.VersionID);
+                }
+                else
+                {
+                    WmiQuery.RemoveAppvPackageLocalHostUser(item.PackageID, item.VersionID);
+                }
                 Thread.Sleep(5000);
                 loadListLocalhost();
+            }
+        }
+
+        private void StopAppvClientPackage(ListAppvPackages item)
+        {
+            if (Connection.status.Length > 0)
+            {
+                WmiQuery.StopAppvClientPackageRemote(item.PackageID, item.VersionID, hostnameTextBox.Text);
+            }
+            else
+            {
+                WmiQuery.StopAppvClientPackageLocalhost(item.PackageID, item.VersionID);
             }
         }
 
@@ -105,6 +136,13 @@ namespace AppVPackageTool
             }
         }
 
+        private void hostnameTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                loadListRemote();
+            }
+        }
     }
     static class Connection
     {
