@@ -1,0 +1,6 @@
+\\pellens.one\Storage\Users\kpellens\Documents\GitHub\AppVPackageTool\AppVPackageTool\AppVPackageTool.Library\bin\Release\AppVPackageTool.Library.dll
+\\pellens.one\Storage\Users\kpellens\Documents\GitHub\AppVPackageTool\AppVPackageTool\AppVPackageTool.Library\bin\Release\AppVPackageTool.Library.pdb
+\\pellens.one\Storage\Users\kpellens\Documents\GitHub\AppVPackageTool\AppVPackageTool\AppVPackageTool.Library\obj\Release\AppVPackageTool.Library.csproj.AssemblyReference.cache
+\\pellens.one\Storage\Users\kpellens\Documents\GitHub\AppVPackageTool\AppVPackageTool\AppVPackageTool.Library\obj\Release\AppVPackageTool.Library.csproj.CoreCompileInputs.cache
+\\pellens.one\Storage\Users\kpellens\Documents\GitHub\AppVPackageTool\AppVPackageTool\AppVPackageTool.Library\obj\Release\AppVPackageTool.Library.dll
+\\pellens.one\Storage\Users\kpellens\Documents\GitHub\AppVPackageTool\AppVPackageTool\AppVPackageTool.Library\obj\Release\AppVPackageTool.Library.pdb

@@ -45,11 +45,11 @@ namespace AppVPackageTool
         private void loadListRemote()
         {
             Connection.status = hostnameTextBox.Text;
-            List<ListAppvPackages> appvPackages = WmiQuery.GetAppvPackagesRemote(hostnameTextBox.Text);
+            List<ListAppvPackages> appvPackages = WmiQuery.GetAppvPackagesRemote(Connection.status);
             if (appvPackages.Count > 0)
             {
                 wmiAppvListBox.ItemsSource = appvPackages;
-                conectedToLabel.Content = $"Connected to: {hostnameTextBox.Text}";
+                conectedToLabel.Content = $"Connected to: {Connection.status}";
                 conectedToLabel.Visibility = Visibility.Visible;
                 refreshButton.IsEnabled = true;
             }
@@ -63,16 +63,24 @@ namespace AppVPackageTool
         private void removePackageButton_Click(object sender, RoutedEventArgs e)
         {
             ListAppvPackages item = wmiAppvListBox.SelectedItem as ListAppvPackages;
-            MessageBox.Show($"{item.Name} {item.IsPublishedGlobally}");
-            if (item.InUse != true)
+            //MessageBox.Show($"{Connection.status} {item.Name} {item.IsPublishedGlobally}");
+            var dialogResult = MessageBox.Show($"Are you sure you want to remove: {item.Name}?", "Warning", MessageBoxButton.OKCancel);
+            if (dialogResult == MessageBoxResult.OK)
             {
-                RemovePackage(item);
+                if (item.InUse != true)
+                {
+                    RemovePackage(item);
+                }
+                else
+                {
+                    StopAppvClientPackage(item);
+                    Thread.Sleep(2000);
+                    RemovePackage(item);
+                }
             }
-            else
+            else if (dialogResult == MessageBoxResult.Cancel)
             {
-                StopAppvClientPackage(item);
-                Thread.Sleep(2000);
-                RemovePackage(item);
+                // do nothing
             }
             
         }
@@ -83,11 +91,11 @@ namespace AppVPackageTool
             {
                 if (item.IsPublishedGlobally)
                 {
-                    WmiQuery.RemoveAppvPackageRemote(item.PackageID, item.VersionID, hostnameTextBox.Text);
+                    WmiQuery.RemoveAppvPackageRemote(item.PackageID, item.VersionID, Connection.status);
                 }
                 else
                 {
-                    WmiQuery.RemoveAppvPackageRemoteUser(item.PackageID, item.VersionID, hostnameTextBox.Text);
+                    WmiQuery.RemoveAppvPackageRemoteUser(item.PackageID, item.VersionID, Connection.status);
                 }
                 Thread.Sleep(5000);
                 loadListRemote();
@@ -111,7 +119,7 @@ namespace AppVPackageTool
         {
             if (Connection.status.Length > 0)
             {
-                WmiQuery.StopAppvClientPackageRemote(item.PackageID, item.VersionID, hostnameTextBox.Text);
+                WmiQuery.StopAppvClientPackageRemote(item.PackageID, item.VersionID, Connection.status);
             }
             else
             {
