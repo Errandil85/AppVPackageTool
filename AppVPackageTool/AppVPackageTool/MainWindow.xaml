@@ -52,10 +52,15 @@
         <Label Grid.Column="1" Grid.Row="3" x:Name="conectedToLabel" Content="Connected to: " Visibility="Hidden" FontWeight="Bold" />
         
         <StackPanel Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button x:Name="refreshButton" Content="Refresh" Margin="5" IsEnabled="False" Click="refreshButton_Click" />
+            <Button x:Name="refreshButton" Content="Refresh" 
+                    Margin="5" 
+                    IsEnabled="False" 
+                    Click="refreshButton_Click" />
             <Button x:Name="removePackageButton" 
                     Content="Remove Package" 
-                    Margin="5" Click="removePackageButton_Click" />
+                    Margin="5" 
+                    IsEnabled="False"
+                    Click="removePackageButton_Click" />
             <Button x:Name="exitButton" Content="Exit" Margin="5" Click="exitButton_Click"/>
         </StackPanel>
     </Grid>

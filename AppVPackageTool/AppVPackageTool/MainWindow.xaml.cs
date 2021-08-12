@@ -40,6 +40,7 @@ namespace AppVPackageTool
             conectedToLabel.Content = "Connected to: Localhost";
             conectedToLabel.Visibility = Visibility.Visible;
             refreshButton.IsEnabled = true;
+            removePackageButton.IsEnabled = true;
         }
 
         private void loadListRemote()
@@ -52,6 +53,7 @@ namespace AppVPackageTool
                 conectedToLabel.Content = $"Connected to: {Connection.status}";
                 conectedToLabel.Visibility = Visibility.Visible;
                 refreshButton.IsEnabled = true;
+                removePackageButton.IsEnabled = true;
             }
         }
 
@@ -63,26 +65,31 @@ namespace AppVPackageTool
         private void removePackageButton_Click(object sender, RoutedEventArgs e)
         {
             ListAppvPackages item = wmiAppvListBox.SelectedItem as ListAppvPackages;
-            //MessageBox.Show($"{Connection.status} {item.Name} {item.IsPublishedGlobally}");
-            var dialogResult = MessageBox.Show($"Are you sure you want to remove: {item.Name}?", "Warning", MessageBoxButton.OKCancel);
-            if (dialogResult == MessageBoxResult.OK)
+            if (item != null)
             {
-                if (item.InUse != true)
+                var dialogResult = MessageBox.Show($"Are you sure you want to remove: {item.Name}?", "Warning", MessageBoxButton.OKCancel);
+                if (dialogResult == MessageBoxResult.OK)
                 {
-                    RemovePackage(item);
+                    if (item.InUse != true)
+                    {
+                        RemovePackage(item);
+                    }
+                    else
+                    {
+                        StopAppvClientPackage(item);
+                        Thread.Sleep(2000);
+                        RemovePackage(item);
+                    }
                 }
-                else
+                else if (dialogResult == MessageBoxResult.Cancel)
                 {
-                    StopAppvClientPackage(item);
-                    Thread.Sleep(2000);
-                    RemovePackage(item);
+                    // do nothing
                 }
             }
-            else if (dialogResult == MessageBoxResult.Cancel)
+            else
             {
-                // do nothing
+                MessageBox.Show("Please select a package", "Warning");
             }
-            
         }
 
         private void RemovePackage(ListAppvPackages item)
