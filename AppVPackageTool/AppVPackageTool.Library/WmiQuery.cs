@@ -10,6 +10,11 @@ namespace AppVPackageTool.Library
 {
     public class WmiQuery
     {
+        
+        /// <summary>
+        /// Query localhost packages
+        /// </summary>
+        /// <returns></returns>
         public static List<ListAppvPackages> GetAppvPackagesLocalHost()
         {
             List<ListAppvPackages> ListAppvPackages = new List<ListAppvPackages>();
@@ -43,6 +48,12 @@ namespace AppVPackageTool.Library
             return ListAppvPackages;
         }
 
+
+        /// <summary>
+        /// Query remote host packages
+        /// </summary>
+        /// <param name="hostname"></param>
+        /// <returns></returns>
         public static List<ListAppvPackages> GetAppvPackagesRemote(string hostname)
         {
             List<ListAppvPackages> ListAppvPackages = new List<ListAppvPackages>();
@@ -77,6 +88,11 @@ namespace AppVPackageTool.Library
             return ListAppvPackages;
         }
 
+        /// <summary>
+        /// Remove package localhost
+        /// </summary>
+        /// <param name="packageID"></param>
+        /// <param name="versionID"></param>
         public static void RemoveAppvPackageLocalHost(string packageID, string versionID)
         {
             object[] cmd = { $"PowerShell.exe Get-AppvClientPackage -PackageId {packageID} -VersionId {versionID} | Unpublish-AppvClientPackage -Global | Remove-AppvClientPackage", null, null, 0 };
@@ -93,6 +109,11 @@ namespace AppVPackageTool.Library
             }
         }
 
+        /// <summary>
+        /// Remove package localhost if only published to user
+        /// </summary>
+        /// <param name="packageID"></param>
+        /// <param name="versionID"></param>
         public static void RemoveAppvPackageLocalHostUser(string packageID, string versionID)
         {
             object[] cmd = { $"PowerShell.exe Get-AppvClientPackage -PackageId {packageID} -VersionId {versionID} | Unpublish-AppvClientPackage | Remove-AppvClientPackage", null, null, 0 };
@@ -108,6 +129,12 @@ namespace AppVPackageTool.Library
             }
         }
 
+        /// <summary>
+        /// Remove package on remote host
+        /// </summary>
+        /// <param name="packageID"></param>
+        /// <param name="versionID"></param>
+        /// <param name="hostname"></param>
         public static void RemoveAppvPackageRemote(string packageID, string versionID, string hostname)
         {
             object[] cmd = { $"PowerShell.exe Get-AppvClientPackage -PackageId {packageID} -VersionId {versionID} | Unpublish-AppvClientPackage -Global | Remove-AppvClientPackage", null, null, 0 };
@@ -124,6 +151,12 @@ namespace AppVPackageTool.Library
             }
         }
 
+        /// <summary>
+        /// Remove package on remote host if package is published to user
+        /// </summary>
+        /// <param name="packageID"></param>
+        /// <param name="versionID"></param>
+        /// <param name="hostname"></param>
         public static void RemoveAppvPackageRemoteUser(string packageID, string versionID, string hostname)
         {
             object[] cmd = { $"PowerShell.exe Get-AppvClientPackage -PackageId {packageID} -VersionId {versionID} | Unpublish-AppvClientPackage | Remove-AppvClientPackage", null, null, 0 };
@@ -140,6 +173,11 @@ namespace AppVPackageTool.Library
             }
         }
 
+        /// <summary>
+        /// Stop running package localhost
+        /// </summary>
+        /// <param name="packageID"></param>
+        /// <param name="versionID"></param>
         public static void StopAppvClientPackageLocalhost(string packageID, string versionID)
         {
             object[] cmd = { $"PowerShell.exe Stop-AppvClientPackage -PackageId {packageID} -VersionId {versionID}", null, null, 0 };
@@ -156,6 +194,12 @@ namespace AppVPackageTool.Library
             }
         }
 
+        /// <summary>
+        /// Stop running package on remote host
+        /// </summary>
+        /// <param name="packageID"></param>
+        /// <param name="versionID"></param>
+        /// <param name="hostname"></param>
         public static void StopAppvClientPackageRemote(string packageID, string versionID, string hostname)
         {
             object[] cmd = { $"PowerShell.exe Stop-AppvClientPackage -PackageId {packageID} -VersionId {versionID}", null, null, 0 };

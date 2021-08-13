@@ -27,29 +27,49 @@ namespace AppVPackageTool
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Close application
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void exitButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
+        /// <summary>
+        /// Load UI with localhost content
+        /// </summary>
         private async void loadListLocalhost()
         {
             //List<ListAppvPackages> appvPackages = WmiQuery.GetAppvPackagesLocalHost();
             List<ListAppvPackages> appvPackages = await GetListAppvLocalhostAsync();
-            wmiAppvListBox.ItemsSource = appvPackages;
-            Connection.status = "";
-            conectedToLabel.Content = "Connected to: Localhost";
-            conectedToLabel.Visibility = Visibility.Visible;
-            refreshButton.IsEnabled = true;
-            removePackageButton.IsEnabled = true;
+            if (appvPackages.Count > 0)
+            {
+                wmiAppvListBox.ItemsSource = appvPackages;
+                Connection.status = "";
+                conectedToLabel.Content = "Connected to: Localhost";
+                conectedToLabel.Visibility = Visibility.Visible;
+                refreshButton.IsEnabled = true;
+                removePackageButton.IsEnabled = true;
+            }  
         }
 
+
+        /// <summary>
+        /// Query async for localhost appv packages
+        /// </summary>
+        /// <returns></returns>
         private async Task<List<ListAppvPackages>> GetListAppvLocalhostAsync()
         {
             List<ListAppvPackages> appvPackages = await Task.Run(() => WmiQuery.GetAppvPackagesLocalHost());
             return appvPackages;
         }
 
+
+        /// <summary>
+        /// Load UI with remote host content
+        /// </summary>
         private async void loadListRemote()
         {
             Connection.status = hostnameTextBox.Text;
@@ -65,20 +85,47 @@ namespace AppVPackageTool
             }
         }
 
+
+        /// <summary>
+        /// Query async for remote host appv packages
+        /// </summary>
+        /// <returns></returns>
         private async Task<List<ListAppvPackages>> GetListAppvRemoteAsync()
         {
             List<ListAppvPackages> appvPackages = await Task.Run(() => WmiQuery.GetAppvPackagesRemote(Connection.status));
             return appvPackages;
         }
 
+
+        /// <summary>
+        /// Louad localhost button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void localHostButton_Click(object sender, RoutedEventArgs e)
         {
             loadListLocalhost();
         }
 
-        private void removePackageButton_Click(object sender, RoutedEventArgs e)
+
+        /// <summary>
+        /// Remove packages button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void removePackageButton_Click(object sender, RoutedEventArgs e)
         {
             ListAppvPackages item = wmiAppvListBox.SelectedItem as ListAppvPackages;
+            await RemovePackageCallAsync(item);
+        }
+
+        /// <summary>
+        /// Remove packages async call for button method
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private async Task RemovePackageCallAsync(ListAppvPackages item)
+        {
             if (item != null)
             {
                 var dialogResult = MessageBox.Show($"Are you sure you want to remove: {item.Name}?", "Warning", MessageBoxButton.OKCancel);
@@ -86,13 +133,13 @@ namespace AppVPackageTool
                 {
                     if (item.InUse != true)
                     {
-                        RemovePackage(item);
+                        await RemovePackageAsync(item);
                     }
                     else
                     {
-                        StopAppvClientPackage(item);
-                        Thread.Sleep(2000);
-                        RemovePackage(item);
+                        await StopAppvClientPackageAsync(item);
+                        await Task.Delay(2000);
+                        await RemovePackageAsync(item);
                     }
                 }
                 else if (dialogResult == MessageBoxResult.Cancel)
@@ -106,53 +153,75 @@ namespace AppVPackageTool
             }
         }
 
-        private void RemovePackage(ListAppvPackages item)
+        /// <summary>
+        /// Method to remove packages async
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private async Task RemovePackageAsync(ListAppvPackages item)
         {
             if (Connection.status.Length > 0)
             {
                 if (item.IsPublishedGlobally)
                 {
-                    WmiQuery.RemoveAppvPackageRemote(item.PackageID, item.VersionID, Connection.status);
+                    await Task.Run(() => WmiQuery.RemoveAppvPackageRemote(item.PackageID, item.VersionID, Connection.status));
                 }
                 else
                 {
-                    WmiQuery.RemoveAppvPackageRemoteUser(item.PackageID, item.VersionID, Connection.status);
+                    await Task.Run(() => WmiQuery.RemoveAppvPackageRemoteUser(item.PackageID, item.VersionID, Connection.status));
                 }
-                Thread.Sleep(5000);
+                //Thread.Sleep(5000);
+                await Task.Delay(5000);
                 loadListRemote();
             }
             else
             {
                 if (item.IsPublishedGlobally)
                 {
-                    WmiQuery.RemoveAppvPackageLocalHost(item.PackageID, item.VersionID);
+                    await Task.Run(() => WmiQuery.RemoveAppvPackageLocalHost(item.PackageID, item.VersionID));
                 }
                 else
                 {
-                    WmiQuery.RemoveAppvPackageLocalHostUser(item.PackageID, item.VersionID);
+                    await Task.Run(() => WmiQuery.RemoveAppvPackageLocalHostUser(item.PackageID, item.VersionID));
                 }
-                Thread.Sleep(5000);
+                //Thread.Sleep(5000);
+                await Task.Delay(5000);
                 loadListLocalhost();
             }
         }
 
-        private void StopAppvClientPackage(ListAppvPackages item)
+        /// <summary>
+        /// Method to stop running appv packages
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private async Task StopAppvClientPackageAsync(ListAppvPackages item)
         {
             if (Connection.status.Length > 0)
             {
-                WmiQuery.StopAppvClientPackageRemote(item.PackageID, item.VersionID, Connection.status);
+                await Task.Run(() => WmiQuery.StopAppvClientPackageRemote(item.PackageID, item.VersionID, Connection.status));
             }
             else
             {
-                WmiQuery.StopAppvClientPackageLocalhost(item.PackageID, item.VersionID);
+                await Task.Run(() => WmiQuery.StopAppvClientPackageLocalhost(item.PackageID, item.VersionID));
             }
         }
 
+        /// <summary>
+        /// Load UI remote button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void connectButton_Click(object sender, RoutedEventArgs e)
         {
             loadListRemote();
         }
 
+        /// <summary>
+        /// Refresh ui
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void refreshButton_Click(object sender, RoutedEventArgs e)
         {
             if (Connection.status.Length > 0)
@@ -165,6 +234,11 @@ namespace AppVPackageTool
             }
         }
 
+        /// <summary>
+        /// Loud remote on enter key in textbox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void hostnameTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
@@ -173,6 +247,10 @@ namespace AppVPackageTool
             }
         }
     }
+
+    /// <summary>
+    /// Connection status class
+    /// </summary>
     static class Connection
     {
         public static string status = "";

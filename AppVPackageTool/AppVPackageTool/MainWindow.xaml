@@ -26,7 +26,7 @@
         
         <StackPanel Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" 
                     Orientation="Horizontal" HorizontalAlignment="Left">
-            <TextBox x:Name="hostnameTextBox" Text="Hostname" MinWidth="60" Margin="5" KeyDown="hostnameTextBox_KeyDown"/>
+            <TextBox x:Name="hostnameTextBox" Text="Hostname" MinWidth="80" Margin="5" KeyDown="hostnameTextBox_KeyDown"/>
             <Button x:Name="connectButton" Content="Connect" Margin="5" Click="connectButton_Click" />
             <Button x:Name="localHostButton" Content="Localhost" Margin="5" Click="localHostButton_Click" />
         </StackPanel>
@@ -40,8 +40,8 @@
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding Name}" />
-                            <TextBlock Text=" - " />
-                            <TextBlock Text="{Binding Version}" />
+                            <!--<TextBlock Text=" - " />
+                            <TextBlock Text="{Binding Version}" />-->
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
