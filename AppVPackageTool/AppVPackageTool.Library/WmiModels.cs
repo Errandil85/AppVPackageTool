@@ -10,6 +10,9 @@ namespace AppVPackageTool.Library
     {
     }
 
+    /// <summary>
+    /// List model for appv packages
+    /// </summary>
     public class ListAppvPackages
     {
         public string Name { get; set; }
