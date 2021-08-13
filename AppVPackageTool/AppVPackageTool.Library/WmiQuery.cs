@@ -13,18 +13,32 @@ namespace AppVPackageTool.Library
         public static List<ListAppvPackages> GetAppvPackagesLocalHost()
         {
             List<ListAppvPackages> ListAppvPackages = new List<ListAppvPackages>();
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("ROOT\\APPV", "select Name, Version, PackageId, VersionID, IsPublishedGlobally, InUse from AppvClientPackage");
-            foreach (ManagementObject queryObj in searcher.Get())
+            try
             {
-                ListAppvPackages.Add(new ListAppvPackages()
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher("ROOT\\APPV", "select Name, Version, PackageId, VersionID, IsPublishedGlobally, InUse from AppvClientPackage");
+                foreach (ManagementObject queryObj in searcher.Get())
                 {
-                    Name = queryObj["Name"].ToString(),
-                    Version = queryObj["Version"].ToString(),
-                    PackageID = queryObj["PackageID"].ToString(),
-                    VersionID = queryObj["VersionID"].ToString(),
-                    IsPublishedGlobally = Convert.ToBoolean(queryObj["IsPublishedGlobally"]),
-                    InUse = Convert.ToBoolean(queryObj["InUse"]),
-                });
+                    ListAppvPackages.Add(new ListAppvPackages()
+                    {
+                        Name = queryObj["Name"].ToString(),
+                        Version = queryObj["Version"].ToString(),
+                        PackageID = queryObj["PackageID"].ToString(),
+                        VersionID = queryObj["VersionID"].ToString(),
+                        IsPublishedGlobally = Convert.ToBoolean(queryObj["IsPublishedGlobally"]),
+                        InUse = Convert.ToBoolean(queryObj["InUse"]),
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.Length == 0)
+                {
+                    MessageBox.Show("Make sure that Appv-V is enbled on your device", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             return ListAppvPackages;
         }
@@ -51,7 +65,14 @@ namespace AppVPackageTool.Library
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (ex.Message.Length == 0)
+                {
+                    MessageBox.Show("Make sure that Appv-V is enbled on your device", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             return ListAppvPackages;
         }

@@ -32,9 +32,10 @@ namespace AppVPackageTool
             this.Close();
         }
 
-        private void loadListLocalhost()
+        private async void loadListLocalhost()
         {
-            List<ListAppvPackages> appvPackages = WmiQuery.GetAppvPackagesLocalHost();
+            //List<ListAppvPackages> appvPackages = WmiQuery.GetAppvPackagesLocalHost();
+            List<ListAppvPackages> appvPackages = await GetListAppvLocalhostAsync();
             wmiAppvListBox.ItemsSource = appvPackages;
             Connection.status = "";
             conectedToLabel.Content = "Connected to: Localhost";
@@ -43,10 +44,17 @@ namespace AppVPackageTool
             removePackageButton.IsEnabled = true;
         }
 
-        private void loadListRemote()
+        private async Task<List<ListAppvPackages>> GetListAppvLocalhostAsync()
+        {
+            List<ListAppvPackages> appvPackages = await Task.Run(() => WmiQuery.GetAppvPackagesLocalHost());
+            return appvPackages;
+        }
+
+        private async void loadListRemote()
         {
             Connection.status = hostnameTextBox.Text;
-            List<ListAppvPackages> appvPackages = WmiQuery.GetAppvPackagesRemote(Connection.status);
+            //List<ListAppvPackages> appvPackages = WmiQuery.GetAppvPackagesRemote(Connection.status);
+            List<ListAppvPackages> appvPackages = await GetListAppvRemoteAsync();
             if (appvPackages.Count > 0)
             {
                 wmiAppvListBox.ItemsSource = appvPackages;
@@ -55,6 +63,12 @@ namespace AppVPackageTool
                 refreshButton.IsEnabled = true;
                 removePackageButton.IsEnabled = true;
             }
+        }
+
+        private async Task<List<ListAppvPackages>> GetListAppvRemoteAsync()
+        {
+            List<ListAppvPackages> appvPackages = await Task.Run(() => WmiQuery.GetAppvPackagesRemote(Connection.status));
+            return appvPackages;
         }
 
         private void localHostButton_Click(object sender, RoutedEventArgs e)
